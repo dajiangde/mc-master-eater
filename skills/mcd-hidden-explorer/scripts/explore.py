@@ -28,8 +28,11 @@ def validate(data):
             raise ValueError("Source must be a clean public HTTPS URL")
         if row["recipe_status"] not in ("cover_only", "reported_recipe"):
             raise ValueError("Unknown evidence status")
-        if not isinstance(row["ingredients"], list) or not isinstance(row["steps"], list):
-            raise ValueError("Ingredients and steps must be lists")
+        if not isinstance(row["ingredients"], list) or not isinstance(row["steps"], list) or not isinstance(row.get("associated_meals", []), list):
+            raise ValueError("Ingredients, associated meals and steps must be lists")
+        for meal in row.get("associated_meals", []):
+            if not isinstance(meal, dict) or not isinstance(meal.get("name"), str) or not meal["name"].strip():
+                raise ValueError("Associated meal needs a name")
         if row["recipe_status"] == "cover_only" and (row["ingredients"] or row["steps"]):
             raise ValueError("Cover evidence cannot contain inferred recipes")
         for item in row["ingredients"]:
@@ -56,9 +59,11 @@ def render(data):
     esc = lambda value: html.escape(str(value), quote=True)
     cards = []
     for row in data["entries"]:
+        meals = row.get("associated_meals", [])
+        meal_text = "、".join(esc(x["name"]) + (" × " + esc(x["quantity"]) if x.get("quantity") is not None else "") for x in meals) or "待核"
         cards.append('<article><small>' + esc(row["id"]) + ' · ' + esc(row["recipe_status"]) +
                      '</small><h2>' + esc(row["name"]) + '</h2><p>' + esc(row["observation"]) +
-                     '</p><a target="_blank" rel="noopener noreferrer" href="' + esc(row["source_url"]) +
+                     '</p><p><strong>对应餐品：</strong>' + meal_text + '</p><a target="_blank" rel="noopener noreferrer" href="' + esc(row["source_url"]) +
                      '">查看来源</a><p>回到聊天说：我选 ' + esc(row["id"]) + '</p></article>')
     body = ''.join(cards) or '<article><h2>等待收录你的隐藏吃法</h2><p>当前公开库为 0 条。请先录入有来源、可公开的资料；这里不会虚构配方或展示未授权图片。</p></article>'
     return '''<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'"><title>麦麦隐藏吃法探索器</title><style>body{background:#faf7f0;color:#30281e;font:16px/1.7 system-ui;margin:0;padding:40px 6%}header{max-width:900px}h1{font-size:36px}main{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}article{padding:25px;background:white;border:1px solid #e6dccb;border-radius:18px}small,a{color:#9b3028}footer{margin-top:35px;color:#625a50}</style><header><p>MCD HIDDEN EXPLORER</p><h1>发现吃法，再配置餐品。</h1><p>看资料 → 选编号 → 核实配方 → MCP 核实门店餐品。民间组合不是官方隐藏商品。</p></header><main>''' + body + '</main><footer>当前为公开文字基础版。图片授权确认后另行接入。价格、库存和供应以门店实时结果为准。</footer></html>'

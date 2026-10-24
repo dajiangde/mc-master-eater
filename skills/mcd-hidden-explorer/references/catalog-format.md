@@ -16,11 +16,28 @@
   "region": "待核实",
   "observation": "只记录图片或来源明确展示的现象",
   "ingredients": [],
+  "associated_meals": [],
   "steps": [],
   "tags": [],
   "assets": []
 }
 ```
+
+`associated_meals` 用于图片／吃法与具体餐品的显式关联，不是实时门店 SKU：
+
+```json
+"associated_meals": [
+  {
+    "name": "薯饼",
+    "quantity": 2,
+    "unit": "片",
+    "role": "核心原料",
+    "evidence": "来源正文／清晰包装／制作过程"
+  }
+]
+```
+
+无法可靠识别时使用空数组，并在展示中写“对应餐品：待核”。不要根据图片外观猜餐品名。实时门店商品名、规格、库存和价格仍只能来自本次 MCP 返回。
 
 ## 证据状态
 

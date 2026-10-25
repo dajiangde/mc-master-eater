@@ -409,6 +409,24 @@ def find_by_product(database, query, limit=3, alias_path=None, exclude=()):
     conn = open_db(database)
     try:
         if not families:
+            # Newly reviewed products need not wait for a hand-edited alias list.
+            # Exact canonical names are safe; fuzzy/partial guesses still use the
+            # explicit family and category rules below.
+            exact = []
+            for row in conn.execute('SELECT * FROM recipes WHERE active=1 ORDER BY number'):
+                hits = [name for name in _recipe_products(conn, row['id'])
+                        if normalize_query(name) == cleaned]
+                if hits:
+                    exact.append((row, hits))
+            if exact:
+                fresh = [(row, hits) for row, hits in exact if row['id'] not in exclude]
+                methods = [_result(conn, row, '规范餐品名精确匹配', hits)
+                           for row, hits in fresh[:limit]]
+                return {'result_schema_version': 1, 'mode': 'local_unified_research',
+                        'entry': 'by_product', 'query': query, 'normalized': cleaned,
+                        'matched_families': [], 'total_matched': len(exact), 'count': len(methods),
+                        'methods': methods, 'fresh_count': len(fresh), 'exhausted': len(fresh) <= limit,
+                        'excluded': sorted(exclude), 'notice': '按资料中的完整餐品名精确匹配；供应仍须实时核实。'}
             term = match_category_terms(cleaned, alias_data)
             if term is not None:
                 wanted = set(term['products'])

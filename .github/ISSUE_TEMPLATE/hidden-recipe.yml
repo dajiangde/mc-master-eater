@@ -1,0 +1,70 @@
+name: 补充隐藏吃法
+description: 投稿进入待审资料，经维护者复核后与图片一起进入 Skill 安装包。
+title: "[吃法投稿] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        请提供吃法本身的真实配图和来源。Issue 内容及附件可能公开，请勿上传私有原图、账号或订单信息。
+        不确定的商品、用量和步骤请写“未知”。维护者会补齐商品映射、核对来源及图片依据，再正式收录。
+        本机研究原图请走本地添加流程；不要为了投稿上传未获许可的他人图片。
+  - type: input
+    id: name
+    attributes: {label: 吃法名称}
+    validations: {required: true}
+  - type: dropdown
+    id: category
+    attributes:
+      label: 类别
+      options: [汉堡, 小食, 甜品, 饮品, 早餐, 其他]
+    validations: {required: true}
+  - type: textarea
+    id: products
+    attributes:
+      label: 所需餐品
+      description: 每行一项，注明口味、规格、买几份和实际用多少；小料可注明可选。
+    validations: {required: true}
+  - type: textarea
+    id: steps
+    attributes: {label: 做法, description: 每行一步，区分原帖步骤与自己的操作建议。}
+    validations: {required: true}
+  - type: dropdown
+    id: basis
+    attributes:
+      label: 步骤依据
+      options: [来源明确描述, 整理建议（未试做）]
+    validations: {required: true}
+  - type: input
+    id: source
+    attributes: {label: 来源链接, description: 原帖或可追溯页面的 HTTPS 链接，不含签名和登录参数。}
+    validations: {required: true}
+  - type: input
+    id: author
+    attributes: {label: 作者或出处}
+    validations: {required: true}
+  - type: input
+    id: region
+    attributes: {label: 地区与时段, description: 例如中国大陆、早餐；未知请写未知。}
+    validations: {required: true}
+  - type: textarea
+    id: photo
+    attributes:
+      label: 允许公开的投稿配图
+      description: 拖入一张本人拥有或已获许可公开使用的静态照片。仅接受 GitHub user-attachments 附件，20MB以内。无法确认权利时只给来源链接，等待补证。
+  - type: dropdown
+    id: rights
+    attributes:
+      label: 图片使用依据
+      description: owned=本人拥有；permission_granted=已获授权；licensed=许可证允许；unknown=未确认。
+      options: [unknown, owned, permission_granted, licensed]
+    validations: {required: true}
+  - type: textarea
+    id: permission
+    attributes: {label: 图片授权说明, description: 写明摄影者、允许本项目加工及随 Skill 分发的依据，或注明待核。}
+    validations: {required: true}
+  - type: textarea
+    id: maintainer
+    attributes:
+      label: 维护者配置（可留空）
+      description: 维护者补充与本地添加相同的 JSON 字段，例如 products、configuration、menu_scope、sources、image、display。普通投稿者可留空。
+      render: json

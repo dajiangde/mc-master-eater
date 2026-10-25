@@ -1,0 +1,2 @@
+# Content maintenance only; installed Skill runtime uses Python's standard library.
+Pillow==12.3.0

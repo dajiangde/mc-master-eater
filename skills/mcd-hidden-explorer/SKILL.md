@@ -1,5 +1,5 @@
 ---
-name: mcd-hidden-explorer
+name: mc-master-eater
 description: 麦门老吃家 · mc-master-eater。民间隐藏吃法严谨考据与官方MCP拆解核价工作台。用于麦当劳/麦门隐藏吃法的看图探索、随机推荐、固定编号选择、官方MCP菜单核验与营养核算。Discover user-supplied McDonald's hidden eating combinations by stable ID, distinguish cover observations from sourced recipes, and—only when requested—map verified ingredients to current McDonald's China MCP store, menu, detail, and price results. Use for hidden-menu inspiration, recipe lookup, and evidence-based meal configuration; do not use for ordinary ordering or unsupported menu claims.
 agent_created: true
 ---
@@ -41,14 +41,14 @@ agent_created: true
 
 ## 0. 选择资料模式
 
-- 公开安装使用 `scripts/explore.py` 与公开 `references/catalog.json`（schema_version 1，公开数据唯一来源，默认可为空）。
+- 存在 `references/public-bundle.json` 时，使用下方含图包流程；这是经过收录复核的数据和加工卡，不依赖研究目录。没有含图包标识时，公开基础包使用 `scripts/explore.py` 与 `references/catalog.json`（schema_version 1，默认可为空）。
 - 在本项目开发／研究上下文，用户已授权读取本地图片餐品对应表时，使用 `scripts/explore.py research-lookup`、`scripts/explore.py coupon-match` 和 `scripts/explore.py dedup`，通过 `--research-catalog` 指向本地研究表（schema_version 3）。不要因为公开 catalog 为空，就报告没有本地资料。
 - 研究数据只读接入，保留来源、图片、原始商品名和各项待核状态，不写入公开 catalog。研究资料缺失时明确报告，不静默切换模式；安装包不自动携带项目研究素材。
 - 两种模式严格隔离：schema_version 1 走 `validate()`，schema_version 3 走 `research_validate()`；研究数据不会被当作公开 catalog 校验，公开 catalog 不会被研究数据污染。
 
-### 本地含图安装包（存在时优先）
+### 含图安装包（存在时优先）
 
-如果本Skill目录内存在`references/local-bundle.json`，这是用户授权的本地含图包，优先用随包编号库和PNG展示卡；不读取旧18条HTML图库或旧R编号研究表来推荐。它不代表公开仓库自带这些第三方素材。
+如果本Skill目录内存在 `references/public-bundle.json`（经复核的收录包）或 `references/local-bundle.json`（用户授权的本地测试包），优先用随包编号库和PNG展示卡；不读取旧18条HTML图库或旧R编号研究表来推荐。本地测试包不代表公开图片权利已确认；公开收录包也不代表本轮门店可售或价格已核。
 
 - 编号库固定在Skill包内`data/unified-v2/隐藏吃法编号.sqlite3`；`numbered_catalog.py`及`discover.py`默认读取这里，普通用户不必给路径。显式`--database`仍可用于开发测试。
 - 会话状态放当前任务输出目录或临时目录，选一个唯一文件并在本任务持续复用；若已存在先读状态，不覆盖或重置。
@@ -56,6 +56,10 @@ agent_created: true
 - 推荐结果中的`hero_image_absolute_path`是统一PNG卡片，最终回复必须包含返回的`image_markdown`；`present_files`仅作为附件补充。不能展示`source_images`里的原照片，也不临时重画卡片。若宿主要求产物在任务目录，逐字节复制返回的PNG到任务输出目录后交付，保留稳定编号及哈希。
 - 图片缩略图可见后，用户可继续说固定编号或“第二张”；后者按本轮记录的顺序解释。用`discover.py select U23 --session <任务状态文件>`查询并维护选择，明确数据库路径时可附`--database`。
 - 未提供`--database`的会话校验命令应使用上述随包数据库；公共空包没有数据时如实说明资料缺失，不搜索私人磁盘、不联网下载原图。
+
+### 添加新吃法（维护者请求时）
+
+读取 [统一收录与构建](references/content-workflow.md)。Issue 和本地添加使用相同投稿结构与 `content_pipeline.py add`；待审投稿不进入推荐池。原图不进入源码或安装包。只在明确要求维护资料时运行收录器，普通食客探索时直接使用随包数据。
 
 ### 统一返回结构
 

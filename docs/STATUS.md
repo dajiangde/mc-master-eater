@@ -1,5 +1,17 @@
 # 当前进展与验收状态
 
+## 2026-10-25 统一投稿与完整安装包自动化
+
+用户授权在 `dajiangde/mc-master-eater` 实现 Issue 与本地添加共用流程。正式真源为 `skills/mcd-hidden-explorer/content/catalog.json`；Issue 表单归一化为与本地 JSON 相同的结构，复核后共用 `content_pipeline.py add` 分配编号、制卡、登记哈希。原图不写入源码或安装包。暂保留空正式收录目录、历史 1～23 号与停用 12 号，不自动公开现有研究图。
+
+- GitHub：投稿反馈、维护者标签／手动触发、待审或正式收录草稿 PR、PR／main 完整检查、手动草稿 Release。审批核对实际仓库写权限，编辑 Issue 不复用旧审批，含人工修改的 PR 不被自动覆盖。
+- 打包：从复核资料生成全新 SQLite、主卡、缩图及 manifest；ZIP 根目录跟随 Skill 标识 `mc-master-eater`，`public-bundle.json` 接入现有推荐。旧本地研究构建器保持独立。
+- 验证：本轮基线299项；全量326项通过（含27项收录测试），8项 Node 工作流测试通过，actionlint通过。Pillow真实制卡、PNG像素／哈希、来源／权利缺项、重复／停用／并发、父商品与口味份数、ZIP跨目录解压和安装副本8种离线路径均覆盖。合成验收图已经目视核对，不能当作真实吃法或素材授权证据。
+- 本地证据：`work/validation/content-pipeline-20261025/`，合成 ZIP 仅测试，不发布。另从现有22张授权本地测试资料重建 `work/local-bundles/content-pipeline-20261025/mc-master-eater-local-only.zip`；它继续标注本地研究包，不转为公开收录。
+- 线上启用和限制：工作流须合并到默认分支后才接收真实 Issue；Actions 创建PR开关和必过检查需独立核对。真实 Issue/runner、正式发布、WorkBuddy自然语言及手机显示仍分别验收。本节不将本地测试写成线上通过；无真实MCP业务、领券、下单或支付。
+
+维护说明：[CONTENT_PIPELINE.md](CONTENT_PIPELINE.md)。
+
 ## 2026-10-25 选号／购买阶段修复与 WorkBuddy 同版交付
 
 用户要求统一源码与 WorkBuddy 安装版，修好触发逻辑并保留口味／份数调整，之后由用户测试。本节覆盖下文历史安装版本和“选号后固定核券”的触发规则。

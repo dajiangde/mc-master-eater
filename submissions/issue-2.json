@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "key": "issue-2",
+  "title": "自动化验收占位（非真实吃法）",
+  "category": "其他",
+  "products": [],
+  "configuration": {
+    "optional_codes": [],
+    "choice_groups": [],
+    "purchase_quantities": {}
+  },
+  "steps": [
+    "未知：仅测试待审入口"
+  ],
+  "step_basis": "project_suggestion",
+  "tested_by_project": false,
+  "optional": "",
+  "differences": "",
+  "sources": [
+    {
+      "url": "https://github.com/dajiangde/mc-master-eater",
+      "author": "项目自动化验收",
+      "published_at": null,
+      "captured_at": "2026-10-25",
+      "region": "未知",
+      "read_status": "投稿者提供，维护者待核"
+    }
+  ],
+  "menu_scope": {
+    "store_code": "",
+    "channel": "",
+    "checked_at": "",
+    "serving_time": ""
+  },
+  "image": {
+    "kind": "finished",
+    "author": "项目自动化验收",
+    "source_url": "https://github.com/dajiangde/mc-master-eater",
+    "published_at": null,
+    "captured_at": "2026-10-25",
+    "region": "未知",
+    "photo_evidence": "投稿者提供，维护者待核",
+    "rights": {
+      "status": "unknown",
+      "basis": "无图片，仅验收入口，不授权正式收录。"
+    }
+  },
+  "display": {
+    "products": [
+      "未知：仅测试待审入口"
+    ],
+    "steps": [
+      "未知：仅测试待审入口"
+    ]
+  },
+  "photo_url": ""
+}

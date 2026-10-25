@@ -1,5 +1,5 @@
 ---
-name: mcd-hidden-explorer
+name: mc-master-eater
 description: 麦门老吃家 · mc-master-eater。民间隐藏吃法严谨考据与官方MCP拆解核价工作台。用于麦当劳/麦门隐藏吃法的看图探索、随机推荐、固定编号选择、官方MCP菜单核验与营养核算。Discover user-supplied McDonald's hidden eating combinations by stable ID, distinguish cover observations from sourced recipes, and—only when requested—map verified ingredients to current McDonald's China MCP store, menu, detail, and price results. Use for hidden-menu inspiration, recipe lookup, and evidence-based meal configuration; do not use for ordinary ordering or unsupported menu claims.
 agent_created: true
 ---

@@ -88,8 +88,8 @@
 需要 Python 3.9+。在 WorkBuddy 导入或复制 `skills/mcd-hidden-explorer`；若已经安装本地研究版，请保留现有包。
 
 ```bash
-git clone https://github.com/dajiangde/mcd-hidden-explorer.git
-cd mcd-hidden-explorer
+git clone https://github.com/dajiangde/mc-master-eater.git
+cd mc-master-eater
 ```
 
 全新安装时，可在 WorkBuddy 中选择本地 Skill 目录，或复制到用户技能目录：

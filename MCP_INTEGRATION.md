@@ -13,6 +13,8 @@
 
 配置模板：
 
+仓库根目录提供比赛要求的 [mcp-config.example.json](mcp-config.example.json)。示例仅使用环境变量占位符；实际凭据在用户本机或宿主连接器中配置，不提交到仓库。宿主是否支持环境变量插值须按其配置规则核实，本文件不保证直接粘贴即可自动读取环境变量。
+
 ```json
 {
   "mcpServers": {
@@ -20,7 +22,7 @@
       "type": "streamablehttp",
       "url": "https://mcp.mcd.cn",
       "headers": {
-        "Authorization": "Bearer YOUR_MCP_TOKEN"
+        "Authorization": "Bearer ${MCD_MCP_TOKEN}"
       }
     }
   }
@@ -44,7 +46,7 @@
 | `query-meals` | 查询指定门店当前可售餐品、规格和商品图 | 餐品映射 |
 | `query-meal-detail` | 查询餐品组成、规格和可用定制信息 | 配方拆解 |
 | `calculate-price` | 按门店、商品、数量和取餐方式核实价格 | 价格确认 |
-| `query-my-coupons` / `query-store-coupons` | 仅在用户要求研究优惠时查询可用优惠 | 可选阶段 |
+| `query-my-coupons` / `query-store-coupons` | 用户明确进入购买配置后，对当前计划统一核券；单纯选号不查个人券 | 购买配置；或用户明确要求按优惠探索 |
 | `create-order` | 创建订单 | 本验证版不调用 |
 | `query-order` | 查询订单状态 | 本验证版不调用 |
 
@@ -64,7 +66,7 @@
   -> 将配方原料逐项映射到实际 SKU / 规格 / 修改项
   -> 对无法映射的外部食材、缺货、时段限制和不支持修改逐项标注
   -> calculate-price
-  -> （用户询问优惠时）读取个人券／可领取券；有门店时 query-store-coupons
+  -> 购买配置阶段对当前计划统一查个人券；有门店时 query-store-coupons，保留已改口味和份数
   -> 按“精确商品规则 > 商品名或集合关联 > 券名／活动文案关联”排序隐藏吃法候选
   -> 不因缺少完整规则过滤掉合理的部分或模糊关联；推荐文案保持简洁
   -> 用户要核价时，带券 calculate-price 比较单点、套餐和优惠条件

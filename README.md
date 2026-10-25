@@ -19,6 +19,22 @@
 
 ---
 
+## 🏆 参赛信息
+
+| 项目 | 信息 |
+| --- | --- |
+| 参赛作品 | 麦门老吃家 · `mc-master-eater` |
+| 比赛 | [麦当劳程序员创意开发大赛](https://github.com/M-China/mcd-developer-innovation-challenge) |
+| 报名记录 | [官方报名 Issue #1269](https://github.com/M-China/mcd-developer-innovation-challenge/issues/1269) |
+| 官方回复 | [2026-10-24 回复“已成功参赛”](https://github.com/M-China/mcd-developer-innovation-challenge/issues/1269#issuecomment-6383930402)；后续资格与排名按活动规则核验 |
+| 参赛声明 | [官方原文，未修改](CONTEST_DECLARATION.md) |
+| MCP 接入 | [集成说明](MCP_INTEGRATION.md) · [脱敏配置示例](mcp-config.example.json) |
+| WorkBuddy 记录 | [开发摘要](workbuddy.md)，不是完整对话导出，不据此承诺专项奖励资格 |
+
+报名记录最初使用旧名称“麦麦隐藏吃法探索器”；现项目与 Skill 已统一为“麦门老吃家 / mc-master-eater”。官方要求参赛仓库持续公开可访问，报名回复不替代后续资格审核。
+
+---
+
 ## 🎬 交互演示：从挑选灵感到清单核价
 
 不用先想好餐品名。一句“随便推荐几个”，从挑灵感开始。

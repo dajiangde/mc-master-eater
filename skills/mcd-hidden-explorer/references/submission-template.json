@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "key": "replace-with-unique-slug",
+  "title": "",
+  "category": "",
+  "products": [],
+  "configuration": {"optional_codes": [], "choice_groups": [], "purchase_quantities": {}},
+  "steps": [],
+  "step_basis": "project_suggestion",
+  "tested_by_project": false,
+  "optional": "",
+  "differences": "",
+  "sources": [{"url": "", "author": "", "published_at": null, "captured_at": "", "region": "中国大陆", "read_status": ""}],
+  "menu_scope": {"store_code": "", "channel": "", "checked_at": "", "serving_time": ""},
+  "image": {"kind": "finished", "author": "", "source_url": "", "published_at": null, "captured_at": "", "region": "中国大陆", "photo_evidence": "", "rights": {"status": "unknown", "basis": ""}},
+  "display": {"products": [], "steps": []}
+}

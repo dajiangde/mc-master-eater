@@ -1,5 +1,9 @@
 # 开发、资料与验收规范
 
+## 统一投稿与可分发含图包（2026-10-25）
+
+新增正式吃法使用 `skills/mcd-hidden-explorer/content/catalog.json` 与共用收录器，详见 [CONTENT_PIPELINE.md](CONTENT_PIPELINE.md)。该编译入口输出新的编号库和完整安装包，不把新的资料格式直接覆盖旧文字 catalog 或研究表。空正式收录库不生成空安装包；现有研究素材不自动转为公开。Issue 和本地添加的编号、卡片、商品配置与跨目录安装检查必须一致。
+
 ## 目录和交付边界
 
 Skill 身份统一取 `SKILL.md` 的 `name: mc-master-eater`，中文名“麦门老吃家”；WorkBuddy 安装路径为 `~/.workbuddy-ai/skills/mc-master-eater/`，ZIP 顶层也按该 name 生成。`skills/mcd-hidden-explorer/` 仅是保留的内部源码路径。旧安装目录应完整备份移出 skills，避免两个名称同时加载；历史快照不改名。

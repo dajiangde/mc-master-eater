@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "reserved_through": 23,
+  "retired": [
+    {"id": "U12", "number": 12, "title": "旧版去骨鸡翅", "note": "已停用，编号永久保留", "retired_on": "2026-10-25"}
+  ],
+  "recipes": []
+}

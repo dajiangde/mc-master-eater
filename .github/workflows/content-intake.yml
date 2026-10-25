@@ -1,0 +1,112 @@
+name: Hidden recipe intake
+on:
+  issues:
+    types: [opened, edited, reopened, labeled]
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: 投稿 Issue 编号
+        type: string
+        required: true
+      import_ready:
+        description: 已完成配方、商品和图片依据复核，制卡并正式收录
+        type: boolean
+        default: false
+permissions: {}
+concurrency:
+  group: content-intake-${{ github.event.issue.number || inputs.issue_number }}
+  cancel-in-progress: false
+jobs:
+  assess:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    outputs:
+      relevant: ${{ steps.assess.outputs.relevant }}
+      authorized: ${{ steps.assess.outputs.authorized }}
+      import_ready: ${{ steps.assess.outputs.import_ready }}
+      issue_number: ${{ steps.assess.outputs.issue_number }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Read issue and check maintainer permission
+        id: assess
+        uses: actions/github-script@v7
+        env:
+          INPUT_ISSUE: ${{ inputs.issue_number }}
+          INPUT_IMPORT: ${{ inputs.import_ready }}
+        with:
+          script: |
+            const intake = require('./.github/scripts/content-intake.cjs');
+            await intake.assess({github, context, core});
+      - name: Normalize into the shared submission format
+        if: steps.assess.outputs.relevant == 'true'
+        run: >-
+          python skills/mcd-hidden-explorer/scripts/content_pipeline.py prepare-issue
+          --issue "$RUNNER_TEMP/intake-issue.json" --output "$RUNNER_TEMP/submission.json"
+      - name: Check completeness and report pending fields
+        if: steps.assess.outputs.relevant == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const intake = require('./.github/scripts/content-intake.cjs');
+            await intake.report({github, context, core});
+      - uses: actions/upload-artifact@v4
+        if: steps.assess.outputs.relevant == 'true'
+        with:
+          name: submission-${{ steps.assess.outputs.issue_number }}
+          path: ${{ runner.temp }}/submission.json
+          retention-days: 7
+  prepare-pr:
+    needs: assess
+    if: needs.assess.outputs.authorized == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - uses: actions/download-artifact@v4
+        with:
+          name: submission-${{ needs.assess.outputs.issue_number }}
+          path: ${{ runner.temp }}/intake
+      - name: Prepare common submission file
+        env:
+          ISSUE_NUMBER: ${{ needs.assess.outputs.issue_number }}
+        run: |
+          mkdir -p submissions
+          cp "$RUNNER_TEMP/intake/submission.json" "submissions/issue-$ISSUE_NUMBER.json"
+      - name: Install content renderer
+        if: needs.assess.outputs.import_ready == 'true'
+        run: |
+          python -m pip install -r requirements-content.txt
+          sudo apt-get update
+          sudo apt-get install -y fonts-noto-cjk
+      - name: Render and import through the shared intake
+        if: needs.assess.outputs.import_ready == 'true'
+        env:
+          ISSUE_NUMBER: ${{ needs.assess.outputs.issue_number }}
+          REVIEWER: ${{ github.actor }}
+        run: >-
+          python skills/mcd-hidden-explorer/scripts/content_pipeline.py add
+          --submission "submissions/issue-$ISSUE_NUMBER.json" --fetch-photo --reviewer "$REVIEWER"
+      - name: Create or reuse a draft pull request
+        uses: actions/github-script@v7
+        env:
+          ISSUE_NUMBER: ${{ needs.assess.outputs.issue_number }}
+          IMPORT_READY: ${{ needs.assess.outputs.import_ready }}
+        with:
+          script: |
+            const intake = require('./.github/scripts/content-intake.cjs');
+            await intake.pullRequest({github, context, core});

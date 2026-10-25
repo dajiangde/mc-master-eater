@@ -1,0 +1,47 @@
+name: Release reviewed Skill
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 版本号，例如 v1.0.0；生成草稿 Release，审核后手动发布
+        type: string
+        required: true
+permissions:
+  contents: write
+concurrency:
+  group: content-release
+  cancel-in-progress: false
+jobs:
+  draft-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Prepare development-only image renderer
+        run: |
+          python -m pip install -r requirements-content.txt
+          sudo apt-get update
+          sudo apt-get install -y fonts-noto-cjk
+      - name: Validate version and build tested package
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          python -c 'import os,re; assert re.fullmatch(r"v[0-9]+\.[0-9]+\.[0-9]+",os.environ["VERSION"]), "版本须为 vX.Y.Z"'
+          PYTHONDONTWRITEBYTECODE=1 python -m unittest discover -s tests -q
+          python skills/mcd-hidden-explorer/scripts/content_pipeline.py build --output "$RUNNER_TEMP/build/mc-master-eater" --zip "$RUNNER_TEMP/mc-master-eater.zip"
+          python -m zipfile -e "$RUNNER_TEMP/mc-master-eater.zip" "$RUNNER_TEMP/clean-install"
+          python "$RUNNER_TEMP/clean-install/mc-master-eater/scripts/content_pipeline.py" verify --bundle "$RUNNER_TEMP/clean-install/mc-master-eater"
+          python "$RUNNER_TEMP/clean-install/mc-master-eater/scripts/bundle_smoke.py" --bundle "$RUNNER_TEMP/clean-install/mc-master-eater"
+          cp "$RUNNER_TEMP/build/mc-master-eater/bundle-manifest.json" "$RUNNER_TEMP/bundle-manifest.json"
+      - name: Create draft release with the exact tested commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          git rev-parse HEAD > "$RUNNER_TEMP/release-sha"
+          gh release create "$VERSION" "$RUNNER_TEMP/mc-master-eater.zip" "$RUNNER_TEMP/bundle-manifest.json" --draft --target "$(cat "$RUNNER_TEMP/release-sha")" --title "麦门老吃家 $VERSION" --notes-file docs/RELEASE_NOTES_TEMPLATE.md

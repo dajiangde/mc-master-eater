@@ -1,81 +1,135 @@
-# 麦麦隐藏吃法探索器 · mcd-hidden-explorer
+![麦门老吃家：红黄积木工作坊，隐藏吃法，认真研究。](assets/readme/maimen-brick-hero.png)
 
-> 发现民间隐藏吃法，再用麦当劳中国 MCP 核实所需餐品。
+# 麦门老吃家
 
-面向想试点不一样的麦当劳吃法、但不知道如何把攻略变成实际餐品清单的用户。用户持续收集来源资料，Skill 负责发现、解释、拆解与门店菜单核实。民间组合不是官方隐藏商品。
+**隐藏吃法，认真研究。**
 
-## 当前状态：可运行的基础仓库
+![WorkBuddy Skill](https://img.shields.io/badge/WorkBuddy-Skill-C92519)
+[![麦当劳中国 MCP](https://img.shields.io/badge/麦当劳中国-MCP-FFD344)](https://github.com/M-China/mcd-mcp-server)
+![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-3776AB)
 
-- 已提供 Skill 编排、公开资料格式、稳定编号查询、资料校验和离线页面生成脚本。
-- **公开资料库当前为 0 条**，等待录入有来源、可公开的吃法；没有用虚构内容填充，也没有发布授权未确认的第三方图片。
-- 当前为文字发现页面；图片图库与正式配方库待素材授权确认后接入。
-- MCP 实测目前仅完成只读时间查询；门店→菜单→详情→价格的完整配置流程尚未完成端到端实测。
-- 不自动创建订单、支付、领券或写购物车。
+刷到一个想试的吃法，却不知道该点哪几样。或者根本没想好，只是想吃点不一样的。
 
-## 体验流程
+麦门老吃家是一个面向 **WorkBuddy** 的隐藏吃法 Skill：先看图找灵感，选中编号后聊配方，再把它拆成当前门店的餐品清单，核对优惠、价格和热量。
 
-发现吃法 → 选择稳定编号 → 判断配方证据 → 用户要求配置 → 核实门店和用餐方式 → 查询实际菜单及详情 → 映射原料与 SKU → 价格核实 → 输出可执行清单、替代方案和未决事项。
+[看使用演示](#demo) · [看看能聊什么](#explore) · [核验样例](#verification) · [安装与版本](#install)
 
-只有封面时不推断完整配方；数量缺失时保留未知；不能匹配的外部食材或时段限制必须明示。
+<a id="demo"></a>
 
-## 安装
+## 先随便看看
 
-Python 3.9+，无第三方 Python 依赖。克隆后，只复制 Skill 子目录；不要将整个仓库复制到自身子目录。
+不用先想好餐品名。一句“随便推荐几个”，从挑灵感开始。
+
+![麦门老吃家使用演示：浏览编号卡片，选择11号，展开做法，查看购买清单与核价样例。](assets/readme/maimen-usage.gif)
+
+*26 秒循环演示。画面为积木风交互示意，采用图形卡片；完整图片体验使用隐藏吃法照片卡片。演示中的价格采用 2026-10-25 龙岩莲南路店已有核验记录。*
+
+<a id="explore"></a>
+
+## 这些话，老吃家接得住
+
+| 你说 | 老吃家接着做 |
+| --- | --- |
+| “不知道吃什么，随便推荐几个。” | 给你不同类别的灵感，换一批时优先避开看过的。 |
+| “只想看薯条相关的。” | 按餐品找组合，分清薯条和薯饼。 |
+| “就 11 号。再加一个 6 号。” | 记住选中的吃法，支持增删、多选和继续挑。 |
+| “菠萝派换成香芋派。” | 更新当前清单，后续查券、核价和热量跟着变化。 |
+| “看看我这些券能做什么。” | 从券里的餐品找灵感；选定后再核对优惠是否适用。 |
+| “帮我看看这家店做下来多少钱。” | 查询门店菜单与选项，核价后给出购买清单和总热量。 |
+
+上表描述本地研究版的工作方式；当前仓库分发范围见[安装与版本](#install)。
+
+## 把灵感拆成一份清单
+
+**“玉米奥利奥麦旋风”是吃法，点单时买的是玉米杯和麦旋风。**
+
+老吃家把三件事串起来：
+
+1. **先找到想试的。** 图片、名称和固定编号放在一起，不用把攻略标题记下来。
+2. **再弄清怎么买、怎么做。** 保留配方和来源，说明时段、替代方案以及需要自己组装的部分。
+3. **最后查这家店的实际结果。** 麦当劳中国 MCP 提供门店菜单、商品选项、优惠和核价；所买规格与份数决定整单热量。
+
+这也是 Skill 在 MCP 之上增加的工作：整理灵感、承接选择、解释配方，再把对话变成可核对的购买清单。
+
+<a id="verification"></a>
+
+## 算过的，留个记录
+
+以下为 **2026-10-25 · 龙岩莲南路店（1410102）· 到店自取**的历史验证样例。价格来自官方 MCP 核价，热量按对应购买清单汇总。
+
+| 吃法 | 购买清单 | 核验总价 | 整份餐品合计热量 |
+| --- | --- | ---: | ---: |
+| U11 · 玉米奥利奥麦旋风 | 小杯玉米杯 × 1 ＋ 经典麦旋风（奥利奥）× 1 | ¥28.50 | 319 千卡 |
+| U06 · 派拌麦旋风 | 派（菠萝派）× 1 ＋ 经典麦旋风（奥利奥）× 1 | ¥23.50 | 487 千卡 |
+| U06 · 换口味 | 派（香芋派）× 1 ＋ 经典麦旋风（草莓）× 1 | ¥23.50 | 527 千卡 |
+| U18 · 麦香鱼夹菠萝派 | 麦香鱼 × 1 ＋ 派（菠萝派）× 1 | ¥31.00 | 546 千卡 |
+
+实际价格、供应和优惠以所选门店当次结果为准。整份餐品热量不等于拌入部分的热量；没有明确用量时不猜实际摄入量。
+
+开发中遇到的一个具体问题：**“奥利奥麦旋风”在该门店是“经典麦旋风”下面的口味选项。** 配置时需要“父商品＋口味选项”，不能把口味编码当成独立商品。改口味后也要重核清单、价格和热量。
+
+## 图鉴怎么收
+
+本地研究版整理了 **22 款启用吃法**，使用固定编号 U01–U23；U12 已停用并保留编号。
+
+- **图要对得上。** 优先保留隐藏吃法本身的实拍，关联名称、配方和来源。
+- **能买到主餐品。** 以大陆商品名整理，说明早餐时段和替代差异；常见小料不逐包阻断。
+- **不知道就留着待核。** 封面线索、来源报道和门店实时结果分开记录。
+- **选过的接着聊。** 编号固定，换一批不打乱之前的选择。
+
+<a id="install"></a>
+
+## 开始试试
+
+**当前仓库提供 Skill 基础代码与本页演示素材。22 张研究照片卡片及对应编号库尚未随仓库分发，直接克隆基础代码不能复现动图里的完整图片探索体验。**
+
+### 安装基础 Skill
+
+需要 Python 3.9+。在 WorkBuddy 导入或复制 `skills/mcd-hidden-explorer`；若已经安装本地研究版，请保留现有包。
 
 ```bash
 git clone https://github.com/dajiangde/mcd-hidden-explorer.git
 cd mcd-hidden-explorer
-mkdir -p "$HOME/.workbuddy-ai/skills"
-# 如目标目录已存在，先备份并人工合并，不直接覆盖。
-cp -R skills/mcd-hidden-explorer "$HOME/.workbuddy-ai/skills/"
 ```
 
-项目级安装可使用 `.workbuddy-ai/skills/`，目标目录同样不得已有同名版本。现有本地探索包不应被此公开空库覆盖。
+全新安装时，可在 WorkBuddy 中选择本地 Skill 目录，或复制到用户技能目录：
 
-在 WorkBuddy 中启用已配置的麦当劳中国连接器。配置与核实边界见 [MCP_INTEGRATION.md](MCP_INTEGRATION.md)。不配置 MCP 也可运行资料查询和页面生成。
+```bash
+mkdir -p ~/.workbuddy-ai/skills
+# 目标目录已有同名 Skill 时，请先备份，避免混入不同版本。
+cp -R skills/mcd-hidden-explorer ~/.workbuddy-ai/skills/
+```
 
-## 本地命令
+启用已配置的[麦当劳中国 MCP 连接器](MCP_INTEGRATION.md)。凭据通过连接器管理，不写进仓库。
+
+具备图片资料包后，可以从这几句话开始：
+
+> “麦门老吃家，随便给我推荐几个隐藏吃法。”
+>
+> “我想看薯条能怎么吃。”
+>
+> “选 11 号，先说说需要点什么。”
+
+目前的图片正文展示验收覆盖 macOS 上的 WorkBuddy AI 5.8.4 / Deepseek-V4.1-Flash；手机、云端与其他系统仍需分别验证。
+
+### 维护自己的资料
+
+按[资料格式](skills/mcd-hidden-explorer/references/catalog-format.md)补充有来源、可使用的内容，再运行基础检查：
 
 ```bash
 python3 skills/mcd-hidden-explorer/scripts/explore.py validate
 python3 skills/mcd-hidden-explorer/scripts/explore.py list
-# 先录入 X01 后才可查询；空库查询会明确报未知编号。
-python3 skills/mcd-hidden-explorer/scripts/explore.py lookup X01
-# 输出需不存在，且父目录必须存在。
-python3 skills/mcd-hidden-explorer/scripts/explore.py build --output /tmp/mcd-hidden.html
-python3 -m unittest discover -s tests -v
 ```
 
-## 持续收集吃法
+仓库中的公开格式资料库当前为空。原始研究图片、签名链接和本机配置不随演示素材上传。
 
-按 [录入格式](skills/mcd-hidden-explorer/references/catalog-format.md) 编辑 `skills/mcd-hidden-explorer/references/catalog.json`，然后运行 `validate`。先录入文字和来源链接，授权未确认的图片留在本地，不公开提交。私有研究目录 `mcd-hidden-explorer/`、工作日志及环境记录均由 `.gitignore` 排除。
+## 再往里看看
 
-## 对话示例（非已收录内容承诺）
+- [Skill 入口](skills/mcd-hidden-explorer/SKILL.md)
+- [资料格式](skills/mcd-hidden-explorer/references/catalog-format.md)
+- [MCP 集成说明](MCP_INTEGRATION.md)
+- [开发摘要](workbuddy.md)
+- [演示素材说明](assets/readme/SOURCES.md)
+- [参赛声明](CONTEST_DECLARATION.md)
 
-- “看看有哪些隐藏吃法。”
-- “我选 X01，先解释它的资料状态。”
-- “我把这条吃法的来源和步骤发给你，帮我整理入库。”
-- “帮我按这家门店现在可买的餐品配置，缺什么就告诉我。”
-
-## 仓库结构
-
-```text
-README.md
-CONTEST_DECLARATION.md
-MCP_INTEGRATION.md
-workbuddy.md
-skills/mcd-hidden-explorer/
-  SKILL.md
-  references/catalog.json
-  references/catalog-format.md
-  scripts/explore.py
-tests/test_explore.py
-```
-
-## 比赛与公开边界
-
-[官方活动仓库](https://github.com/M-China/mcd-developer-innovation-challenge)要求 README、原样参赛声明、MCP 集成说明及可运行内容。本文档及源码组成基础提交材料，不代表已报名成功。
-
-`workbuddy.md` 当前仅为真实开发摘要，**不是完整对话导出**；申请 WorkBuddy 专项奖励时需补充真实导出并脱敏。还需录入正式吃法、完成实时配置验证，再提交报名 Issue。本仓库不会自动代替用户提交报名声明。
-
-本项目为独立开发的非官方参赛作品，无麦当劳官方背书。品牌及相关商标归权利人所有。内容不构成营养、医疗等专业建议；餐品、价格和供应以官方渠道实时结果为准。禁止提交凭据、个人信息或未获授权素材。
+本项目以 [2026 麦当劳程序员创意开发大赛](https://github.com/M-China/mcd-developer-innovation-challenge)为开发场景，由参赛者独立开发，非麦当劳官方产品。民间组合由用户拿到餐品后自行组装；领券、创建订单需分别明确确认，创建订单不代表支付完成。营养信息供参考，不构成医疗建议。品牌及相关商标归原权利人所有。

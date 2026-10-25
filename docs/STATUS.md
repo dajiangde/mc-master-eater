@@ -1,5 +1,33 @@
 # 当前进展与验收状态
 
+## 2026-10-25 工作区清理与提交验收
+
+按用户要求清理根目录的392个Python临时探测文件，仅移动经确认未跟踪、8字符随机名、4字节且内容为 `blat` 的文件；可恢复归档在 `work/cleanup/tempfile-probes-20261025-141613/`，正常源码与素材不作删除。
+
+本轮重新运行326项Python测试，全部通过、无跳过（现有Python 3.12/Pillow 11.2.1维护环境）；8项Node投稿流程测试及actionlint通过，正式收录库校验通过且条目数为0。系统Python缺少Pillow时有2项制卡检查跳过，已用上述维护环境补齐；CI锁定依赖的真实runner结果另行记录，不把本机测试当成线上通过。
+
+工作区按统一身份、投稿与含图打包、文档三个交付单元显式提交。研究原图、缓存、账号配置、临时安装包和清理归档继续被忽略；没有创建真实投稿、发版、领券或下单。README同步当前测试数，并明确基础空库不能复现完整探索。
+
+## 2026-10-25 统一投稿与完整安装包自动化
+
+用户授权在 `dajiangde/mc-master-eater` 实现 Issue 与本地添加共用流程。正式真源为 `skills/mcd-hidden-explorer/content/catalog.json`；Issue 表单归一化为与本地 JSON 相同的结构，复核后共用 `content_pipeline.py add` 分配编号、制卡、登记哈希。原图不写入源码或安装包。暂保留空正式收录目录、历史 1～23 号与停用 12 号，不自动公开现有研究图。
+
+- GitHub：投稿反馈、维护者标签／手动触发、待审或正式收录草稿 PR、PR／main 完整检查、手动草稿 Release。审批核对实际仓库写权限，编辑 Issue 不复用旧审批，含人工修改的 PR 不被自动覆盖。
+- 打包：从复核资料生成全新 SQLite、主卡、缩图及 manifest；ZIP 根目录跟随 Skill 标识 `mc-master-eater`，`public-bundle.json` 接入现有推荐。旧本地研究构建器保持独立。
+- 验证：本轮基线299项；全量326项通过（含27项收录测试），8项 Node 工作流测试通过，actionlint通过。Pillow真实制卡、PNG像素／哈希、来源／权利缺项、重复／停用／并发、父商品与口味份数、ZIP跨目录解压和安装副本8种离线路径均覆盖。合成验收图已经目视核对，不能当作真实吃法或素材授权证据。
+- 本地证据：`work/validation/content-pipeline-20261025/`，合成 ZIP 仅测试，不发布。另从现有22张授权本地测试资料重建 `work/local-bundles/content-pipeline-20261025/mc-master-eater-local-only.zip`；它继续标注本地研究包，不转为公开收录。
+- 线上启用和限制：工作流须合并到默认分支后才接收真实 Issue；Actions 创建PR开关和必过检查需独立核对。真实 Issue/runner、正式发布、WorkBuddy自然语言及手机显示仍分别验收。本节不将本地测试写成线上通过；无真实MCP业务、领券、下单或支付。
+
+维护说明：[CONTENT_PIPELINE.md](CONTENT_PIPELINE.md)。
+
+## 2026-10-25 Skill 身份与仓库统一为 mc-master-eater
+
+用户要求 Skill 名称与已确定的仓库标识统一。已将 SKILL.md 的 `name` 从 `mcd-hidden-explorer` 改为 `mc-master-eater`，中文名保持“麦门老吃家”；两套打包入口均从 SKILL.md 读取 name 生成 ZIP 顶层目录，避免再次沿用旧名。内部源码路径 `skills/mcd-hidden-explorer/` 保留，AGENTS、安装说明与开发规范已注明新安装名。
+
+在用户 WorkBuddy 测试完成后执行迁移：旧实体目录完整备份移出，新的实体目录为 `~/.workbuddy-ai/skills/mc-master-eater/`，旧 `~/.workbuddy-ai/skills/mcd-hidden-explorer/` 已不存在。48 个包内文件、22 个源码文件逐项一致，22 张 PNG 齐全；全量 321 项检查通过，安装目录 9 个离线衔接场景通过。WorkBuddy 5.8.4 已安装列表实时读回 `mc-master-eater`、开关 on、旧名无条目，未发送新测试消息或执行业务 MCP。
+
+新本地包 `work/local-bundles/skill-rename-20261025-140550/mc-master-eater`，本地测试 ZIP `work/validation/skill-rename-20261025-140550/mc-master-eater-local.zip`。验证与备份见[安装核对](../work/validation/skill-rename-20261025-140550/INSTALLATION.json)、[安装目录检查](../work/validation/skill-rename-20261025-140550/installed-checks.json)、[界面截图](../work/validation/skill-rename-20261025-140550/workbuddy-renamed-enabled.png)。此节覆盖下文历史安装路径；不修改历史冻结包、Git 远端或发布状态。
+
 ## 2026-10-25 选号／购买阶段修复与 WorkBuddy 同版交付
 
 用户要求统一源码与 WorkBuddy 安装版，修好触发逻辑并保留口味／份数调整，之后由用户测试。本节覆盖下文历史安装版本和“选号后固定核券”的触发规则。
@@ -640,3 +668,13 @@ SKILL.md：删掉"推荐后再手动 recommend"的重复要求（入口已登记
 当前冻结包：`work/local-bundles/flow-verified-20261025-134648/mcd-hidden-explorer.zip`；bundle_id `2dc2d87b98e1d6e28345e121ad6f4bcfffe63275c065d276fde38a2838b57a73`。安装为实体目录，旧安装保存在 `work/validation/codex-flow-acceptance-20261025-134540/installed-before`。本节覆盖前节276项与旧安装版本记录；未发布、推送或提交。
 
 验收报告：[work/validation/codex-flow-acceptance-20261025-134540/REPORT.md](../work/validation/codex-flow-acceptance-20261025-134540/REPORT.md)。
+
+
+## 2026-10-25 门面与积木风演示素材整合（README 图片保留与全量门面恢复）
+
+针对 `b0a88ce` 合并提交引入积木风插画与动图素材后覆盖门面内容的冲突，完成一体化整合：
+
+- **图片素材保留**：保留 `assets/readme/maimen-brick-hero.png`（红黄积木工作坊顶部 Hero Banner）、`assets/readme/maimen-usage.gif`（26 秒选号与核价循环演示）及 `assets/readme/SOURCES.md` 说明链接。
+- **全量门面融合**：恢复「麦门老吃家 · mc-master-eater」核心内容：徽章矩阵、四大痛点剖析、核心能力对照表、22 款卡片图鉴、官方 MCP 龙岩莲南路店真实核价跑分与防套路审计、四维考据铁律、硬核架构与快速上手指引。
+- **打包流水线兼容**：修复 `content_pipeline.py` 在 `verify_bundle` 中未排除 `__pycache__` 导致测试偶发失败的问题。
+- **验证**：全量 **321 项单元测试全部通过**（`cd tests && python3 -m unittest discover -s . -t .`）。

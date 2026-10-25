@@ -25,14 +25,11 @@ def check(root):
         ids = [r[0] for r in conn.execute('SELECT id FROM recipes WHERE active=1 ORDER BY number')]
     with tempfile.TemporaryDirectory(prefix='mcd-installed-smoke-') as temporary:
         session = Path(temporary) / 'random.json'; ss.init_session(session)
-        shown = set()
-        for seed in range(len(ids) + 1):
-            result = discover.random_entry(database, session, limit=3, seed=seed)
-            cp.require(result['inline_image_count'] == len(result['methods']), '随机推荐缺图')
-            shown.update(r['id'] for r in result['methods'])
-            if shown == set(ids):
-                break
-        cp.require(shown == set(ids), '新增吃法未进入随机推荐池')
+        # Inspect the whole random pool once. Repeated user-sized batches can
+        # repeat seen cards near exhaustion, making a finite coverage test flaky.
+        result = discover.random_entry(database, session, limit=len(ids), seed=1)
+        cp.require(result['inline_image_count'] == len(ids), '随机推荐缺图')
+        cp.require({r['id'] for r in result['methods']} == set(ids), '新增吃法未进入随机推荐池')
         for ident in ids:
             methods = nc.resolve(database, ident)['methods']
             method = methods[0]

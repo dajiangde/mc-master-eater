@@ -23,8 +23,8 @@
 - GitHub：投稿反馈、维护者标签／手动触发、待审或正式收录草稿 PR、PR／main 完整检查、手动草稿 Release。审批核对实际仓库写权限，编辑 Issue 不复用旧审批，含人工修改的 PR 不被自动覆盖。
 - 打包：从复核资料生成全新 SQLite、主卡、缩图及 manifest；ZIP 根目录跟随 Skill 标识 `mc-master-eater`，`public-bundle.json` 接入现有推荐。旧本地研究构建器保持独立。
 - 验证：本轮基线299项；全量326项通过（含27项收录测试），8项 Node 工作流测试通过，actionlint通过。Pillow真实制卡、PNG像素／哈希、来源／权利缺项、重复／停用／并发、父商品与口味份数、ZIP跨目录解压和安装副本8种离线路径均覆盖。合成验收图已经目视核对，不能当作真实吃法或素材授权证据。
-- 本地证据：`work/validation/content-pipeline-20261025/`，合成 ZIP 仅测试，不发布。另从现有22张授权本地测试资料重建 `work/local-bundles/content-pipeline-20261025/mc-master-eater-local-only.zip`；它继续标注本地研究包，不转为公开收录。
-- 线上启用和限制：工作流须合并到默认分支后才接收真实 Issue；Actions 创建PR开关和必过检查需独立核对。真实 Issue/runner、正式发布、WorkBuddy自然语言及手机显示仍分别验收。本节不将本地测试写成线上通过；无真实MCP业务、领券、下单或支付。
+- 本地证据：`work/validation/content-pipeline-20261025/`，合成 ZIP 仅测试，不发布。从现有22张本地测试资料重建 `work/local-bundles/content-pipeline-v2-20261025/mc-master-eater-local-only.zip`，继续标注本地研究包。用户明确批准备份后更新安装，实体安装48个文件哈希一致，11/23号图片与购买清单离线冒烟通过；旧包在同一验收目录 `installed-before/` 与 `installed-before-v2/`，不转为公开收录。
+- 线上启用：实现已由 `4ad039c` 进入 main，`52cdc09` 的真实 GitHub CI 成功。正式库为空，公开包构建步骤按设计跳过；完整ZIP链路由合成夹具测试覆盖，不记为真实素材发版通过。用户明确授权后，Actions 创建／审批 PR 的组合开关已启用，默认令牌保持 read；本项目没有自动审批或合并逻辑。测试 Issue #2 已收到机器人“图片公开使用依据尚未确认”反馈，加 `intake:prepare` 后自动生成仅含待审JSON的草稿PR #3，两个真实intake工作流成功（40169329784／40169452438）。正式收录仍为0，不把测试条目放入推荐池。正式发布、WorkBuddy自然语言、手机和真实MCP仍独立验收，无领券、下单或支付。
 
 维护说明：[CONTENT_PIPELINE.md](CONTENT_PIPELINE.md)。
 

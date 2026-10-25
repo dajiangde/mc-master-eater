@@ -1,0 +1,7 @@
+# Exclude original research assets from Git archive exports too.
+work/** export-ignore
+mcd-hidden-explorer/** export-ignore
+**/source-images/** export-ignore
+**/original-images/** export-ignore
+**/raw-images/** export-ignore
+**/assets/originals/** export-ignore

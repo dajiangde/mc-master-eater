@@ -9,3 +9,12 @@ __pycache__/
 .env.*
 *mcp.local.json
 credentials*
+
+# Raw research media stay local; processed assets/cards and thumbnails remain eligible.
+**/source-images/
+**/original-images/
+**/raw-images/
+**/assets/originals/
+
+# Ephemeral test directories are never source.
+**/.tmp/

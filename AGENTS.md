@@ -13,7 +13,8 @@
 
 - `skills/mcd-hidden-explorer/`：**唯一源码真源**，公开开发候选。新增正式功能以这里为准。
 - 旧 HTML 图库版（18 条 X/T 编号）已归档到 `work/archive/html-gallery-v1-20261025/`，附 `DEPRECATED.md`。不要再从它取数据或推荐，也不要把它装回 Skill 目录。
-- 安装版必须是**实体目录**，不能是指向 `work/` 的软链接。`work/` 被 gitignore，软链接会让整包随 work 清理而失效。用 `build_local_bundle.py` 生成后整目录复制到 `~/.workbuddy-ai/skills/mcd-hidden-explorer/`。
+- Skill 英文标识与仓库统一为 `mc-master-eater`，中文名为“麦门老吃家”；`skills/mcd-hidden-explorer/` 暂保留为内部源码路径，不作为安装入口名。
+- 安装版必须是**实体目录**，不能是指向 `work/` 的软链接。`work/` 被 gitignore，软链接会让整包随 work 清理而失效。用 `build_local_bundle.py` 生成后整目录复制到 `~/.workbuddy-ai/skills/mc-master-eater/`；旧 `mcd-hidden-explorer` 安装入口备份移出，不能并存。
 - `work/`：忽略提交的研究材料、历史快照、测试记录；归档保持原样，不把归档当维护分支。
 - 两套 catalog 和脚本结构不同。禁止无差别同步或用一套数据文件直接替换另一套。
 - 改了 `skills/mcd-hidden-explorer/` 的代码或文档后，必须重新构建并覆盖安装目录，否则测的是旧包。

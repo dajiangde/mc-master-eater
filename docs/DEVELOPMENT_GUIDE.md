@@ -6,6 +6,8 @@
 
 ## 目录和交付边界
 
+Skill 身份统一取 `SKILL.md` 的 `name: mc-master-eater`，中文名“麦门老吃家”；WorkBuddy 安装路径为 `~/.workbuddy-ai/skills/mc-master-eater/`，ZIP 顶层也按该 name 生成。`skills/mcd-hidden-explorer/` 仅是保留的内部源码路径。旧安装目录应完整备份移出 skills，避免两个名称同时加载；历史快照不改名。
+
 | 目录／文件 | 角色 | 更新规则 |
 | --- | --- | --- |
 | `skills/mcd-hidden-explorer/` | 公开候选的唯一维护入口 | 新功能在这里实现，使用包内相对路径 |

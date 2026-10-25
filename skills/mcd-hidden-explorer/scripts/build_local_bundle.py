@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+import re
 import shutil
 import sqlite3
 import zipfile
@@ -15,6 +16,17 @@ import zipfile
 def require(ok, message):
     if not ok:
         raise ValueError(message)
+
+
+def skill_name(skill):
+    """Use SKILL.md identity for every installer archive, not a work folder name."""
+    lines = (Path(skill) / 'SKILL.md').read_text(encoding='utf8').splitlines()
+    require(lines and lines[0] == '---' and '---' in lines[1:], '缺少Skill元数据')
+    header = lines[1:lines.index('---', 1)]
+    names = [line.split(':', 1)[1].strip() for line in header if line.startswith('name:')]
+    require(len(names) == 1 and re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*', names[0]),
+            'Skill name必须是有效且唯一的英文标识')
+    return names[0]
 
 
 def build(skill, database, card_catalog, output):
@@ -59,6 +71,7 @@ def build(skill, database, card_catalog, output):
              'display_products','display_steps','display_note','source_ids','image_source_ids','rights'] if k in e})
     (target / 'catalog.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n')
     info = {'schema_version': 1, 'mode':'local_research_bundle', 'public_release':False,
+            'skill_name':skill_name(skill),
             'database':'data/unified-v2/隐藏吃法编号.sqlite3', 'card_catalog':'data/base-cards-v1/catalog.json',
             'active_count':len(active), 'source_catalog_sha256':source_hash,
             'policy_sha256':policy_hash,
@@ -85,7 +98,7 @@ def main():
         if args.zip:
             with zipfile.ZipFile(args.zip,'w',zipfile.ZIP_DEFLATED) as archive:
                 for file in sorted(args.output.rglob('*')):
-                    if file.is_file():archive.write(file,str(Path(args.output.name)/file.relative_to(args.output)))
+                    if file.is_file():archive.write(file,str(Path(skill_name(args.skill))/file.relative_to(args.output)))
         print(json.dumps(result,ensure_ascii=False,indent=2))
     except (ValueError,OSError,KeyError,TypeError,sqlite3.DatabaseError) as exc:
         print(json.dumps({'error':str(exc)},ensure_ascii=False));return 2
